@@ -1,35 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import Login from './components/auth/Login'
+import Register from './components/auth/Register'
+// Importa un componente placeholder para el dashboard por ahora
+import Dashboard from './components/Dashboard' // Lo crearemos en el siguiente paso
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <nav style={styles.nav}>
+        <ul style={styles.navList}>
+          <li style={styles.navItem}>
+            <Link to="/register" style={styles.navLink}>
+              Registrarse
+            </Link>
+          </li>
+          <li style={styles.navItem}>
+            <Link to="/login" style={styles.navLink}>
+              Iniciar Sesión
+            </Link>
+          </li>
+          <li style={styles.navItem}>
+            <Link to="/dashboard" style={styles.navLink}>
+              Dashboard (Provisional)
+            </Link>
+          </li>
+        </ul>
+      </nav>
+
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} /> {/* Ruta protegida en el futuro */}
+        <Route path="/" element={<Login />} /> {/* Redirige a login por defecto */}
+      </Routes>
+    </Router>
   )
+}
+
+// Estilos básicos para la barra de navegación
+const styles = {
+  nav: {
+    backgroundColor: '#333',
+    padding: '10px 0',
+    textAlign: 'center',
+  },
+  navList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '20px',
+  },
+  navItem: {
+    display: 'inline-block',
+  },
+  navLink: {
+    color: 'white',
+    textDecoration: 'none',
+    fontSize: '18px',
+    padding: '8px 15px',
+    borderRadius: '5px',
+    transition: 'background-color 0.3s ease',
+  },
+  navLinkHover: {
+    backgroundColor: '#555',
+  },
 }
 
 export default App

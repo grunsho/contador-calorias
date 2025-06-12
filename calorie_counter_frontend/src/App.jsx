@@ -1,8 +1,8 @@
 import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
-// Importa un componente placeholder para el dashboard por ahora
-import Dashboard from './components/Dashboard' // Lo crearemos en el siguiente paso
+import Dashboard from './components/Dashboard'
+import FoodSearch from './components/FoodSearch'
 
 function App() {
   return (
@@ -24,6 +24,11 @@ function App() {
               Dashboard (Provisional)
             </Link>
           </li>
+          <li style={styles.navItem}>
+            <Link to="/foods" style={styles.navLink}>
+              Buscar Alimentos
+            </Link>
+          </li>
         </ul>
       </nav>
 
@@ -31,6 +36,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} /> {/* Ruta protegida en el futuro */}
+        <Route path="/foods" element={<FoodSearch />} />
         <Route path="/" element={<Login />} /> {/* Redirige a login por defecto */}
       </Routes>
     </Router>

@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
-from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import UserRegisterSerializer, UserSerializer
+from .models import FoodItem
+from .serializers import (FoodItemSerializer, UserRegisterSerializer,
+                          UserSerializer)
 
 
 class RegisterView(APIView):
@@ -38,3 +40,17 @@ class RegisterView(APIView):
 #             "refresh": str(refresh),
 #             "access": str(refresh.access_token),
 #         }, status=status.HTTP_200_OK)
+
+
+class FoodItemListViewCreate(generics.ListCreateAPIView):
+    queryset = FoodItem.objects.all()
+    serializer_class = FoodItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get('search', None)
+        if search_query is not None:
+            queryset = queryset.filter(name__icontains=search_query) | \
+                queryset.filter(brand__icontains=search_query)
+        return queryset

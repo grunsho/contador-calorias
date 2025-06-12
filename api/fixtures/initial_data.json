@@ -1,0 +1,78 @@
+[
+  {
+    "model": "api.fooditem",
+    "pk": 1,
+    "fields": {
+      "name": "Pechuga de Pollo",
+      "brand": null,
+      "portion_size_g": "100.00",
+      "portion_unit": "g",
+      "calories": "165.00",
+      "proteins": "31.00",
+      "fats": "3.60",
+      "carbs": "0.00",
+      "sugars": null,
+      "fiber": null,
+      "sodium": null,
+      "created_by": null,
+      "is_custom": false
+    }
+  },
+  {
+    "model": "api.fooditem",
+    "pk": 2,
+    "fields": {
+      "name": "Arroz Blanco Cocido",
+      "brand": null,
+      "portion_size_g": "100.00",
+      "portion_unit": "g",
+      "calories": "130.00",
+      "proteins": "2.70",
+      "fats": "0.30",
+      "carbs": "28.00",
+      "sugars": null,
+      "fiber": null,
+      "sodium": null,
+      "created_by": null,
+      "is_custom": false
+    }
+  },
+  {
+    "model": "api.fooditem",
+    "pk": 3,
+    "fields": {
+      "name": "Manzana",
+      "brand": null,
+      "portion_size_g": "182.00",
+      "portion_unit": "g",
+      "calories": "95.00",
+      "proteins": "0.50",
+      "fats": "0.30",
+      "carbs": "25.00",
+      "sugars": null,
+      "fiber": null,
+      "sodium": null,
+      "created_by": null,
+      "is_custom": false
+    }
+  },
+  {
+    "model": "api.fooditem",
+    "pk": 4,
+    "fields": {
+      "name": "Huevo Grande",
+      "brand": null,
+      "portion_size_g": "50.00",
+      "portion_unit": "g",
+      "calories": "78.00",
+      "proteins": "6.00",
+      "fats": "5.00",
+      "carbs": "0.60",
+      "sugars": null,
+      "fiber": null,
+      "sodium": null,
+      "created_by": null,
+      "is_custom": false
+    }
+  }
+]

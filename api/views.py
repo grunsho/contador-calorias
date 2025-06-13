@@ -1,13 +1,14 @@
 from django.contrib.auth.models import User
-from rest_framework import generics, status
+from rest_framework import generics, permissions, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import FoodItem
-from .serializers import (FoodItemSerializer, UserRegisterSerializer,
+from .models import FoodItem, Meal, MealFoodItem
+from .serializers import (FoodItemSerializer, MealFoodItemSerialazer,
+                          MealSerializer, UserRegisterSerializer,
                           UserSerializer)
 
 
@@ -54,3 +55,28 @@ class FoodItemListViewCreate(generics.ListCreateAPIView):
             queryset = queryset.filter(name__icontains=search_query) | \
                 queryset.filter(brand__icontains=search_query)
         return queryset
+
+
+class MealListCreateView(generics.ListCreateAPIView):
+    queryset = Meal.objects.all()
+    serializer_class = MealSerializer
+    # Solo usuarios autenticados
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Solo muestra las comidas del usuario autenticado
+        return Meal.objects.filter(user=self.request.user).order_by('-date', 'meal_type')
+
+    def perform_create(self, serializer):
+        # Asigna automáticamente el usuario autenticado a la comida
+        serializer.save(user=self.request.user)
+
+
+class MealRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Meal.objects.all()
+    serializer_class = MealSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Solo permite al usuario acceder a sus propias comidas
+        return Meal.objects.filter(user=self.request.user)

@@ -3,6 +3,8 @@ import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Dashboard from './components/Dashboard'
 import FoodSearch from './components/FoodSearch'
+import MealLogger from './components/MealLogger'
+import PrivateRoute from './components/PrivateRoute'
 
 function App() {
   return (
@@ -29,14 +31,41 @@ function App() {
               Buscar Alimentos
             </Link>
           </li>
+          <li style={styles.navItem}>
+            <Link to="/log-meal" style={styles.navLink}>
+              Registrar Comida
+            </Link>
+          </li>
         </ul>
       </nav>
 
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} /> {/* Ruta protegida en el futuro */}
-        <Route path="/foods" element={<FoodSearch />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/foods"
+          element={
+            <PrivateRoute>
+              <FoodSearch />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/log-meal"
+          element={
+            <PrivateRoute>
+              <MealLogger />
+            </PrivateRoute>
+          }
+        />
         <Route path="/" element={<Login />} /> {/* Redirige a login por defecto */}
       </Routes>
     </Router>

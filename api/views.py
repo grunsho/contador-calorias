@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import FoodItem, Meal, MealFoodItem
-from .serializers import (FoodItemSerializer, MealFoodItemSerialazer,
+from .serializers import (FoodItemSerializer, MealFoodItemSerializer,
                           MealSerializer, UserRegisterSerializer,
                           UserSerializer)
 

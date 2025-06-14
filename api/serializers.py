@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from .models import FoodItem, Meal, MealFoodItem
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,44 +63,57 @@ class LoginSerailizer(serializers.Serializer):
         data['user'] = user
         return data
 
+
 class FoodItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodItem
         fields = '__all__'
 
-class MealFoodItemSerialazer(serializers.ModelSerializer):
+
+class MealFoodItemSerializer(serializers.ModelSerializer):
     # Para GET: Queremos el nombre del alimento, no solo su ID
-    food_item_name = serializers.CharField(source='food_item.name', read_only=True)
-    food_item_brand = serializers.CharField(source='food_item.brand', read_only=True)
-    food_item_portion_unit = serializers.CharField(source='food_item.portion_unit', read_only=True)
+    food_item_name = serializers.CharField(
+        source='food_item.name', read_only=True)
+    food_item_brand = serializers.CharField(
+        source='food_item.brand', read_only=True)
+    food_item_portion_unit = serializers.CharField(
+        source='food_item.portion_unit', read_only=True)
 
     # Campos calculados, solo lectura
-    calculated_calories = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    calculated_proteins = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    calculated_fats = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    calculated_carbs = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    calculated_calories = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
+    calculated_proteins = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
+    calculated_fats = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
+    calculated_carbs = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = MealFoodItem
-        fields= [
+        fields = [
             'id', 'food_item', 'food_item_name', 'food_item_brand', 'food_item_portion_unit', 'quantity',
             'calculated_calories', 'calculated_proteins', 'calculated_fats', 'calculated_carbs'
         ]
-        
         # Para POST: Solo necesitamos food_item (ID) y quantity
         extra_kwargs = {
             'food_item': {'write_only': True}
         }
 
+
 class MealSerializer(serializers.ModelSerializer):
     # Permite anidar los MealFoodItems para la creación/visualización
-    meal_food_item = MealFoodItemSerialazer(many=True)
-    
+    meal_food_items = MealFoodItemSerializer(many=True)
+
     # Campos calculados de solo lectura para la suma total de la comida
-    total_calories = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    total_proteins = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    total_fats = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    total_carbs = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    total_calories = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
+    total_proteins = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
+    total_fats = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
+    total_carbs = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = Meal
@@ -106,26 +121,29 @@ class MealSerializer(serializers.ModelSerializer):
             'id', 'user', 'date', 'meal_type', 'meal_food_items',
             'total_calories', 'total_proteins', 'total_fats', 'total_carbs'
         ]
-        read_only_fields = ['user'] # El usuario se asigna automáticamente en la vista
-        
+        # El usuario se asignará automáticamente en la vista
+        read_only_fields = ['user']
+
     def create(self, validated_data):
         # Extrae los alimentos de la comida
         meal_food_items_data = validated_data.pop('meal_food_items')
-        
+
         # Crea la instancia de Meal
         meal = Meal.objects.create(**validated_data)
-        
+
         # Crea las instancias de MealFoodItem
         for item_data in meal_food_items_data:
             MealFoodItem.objects.create(meal=meal, **item_data)
+
         return meal
-    
+
     def update(self, instance, validated_data):
-        # Actualiza los datos básicos de la comida
+        # Actualiza campos básicos de la comida
         instance.date = validated_data.get('date', instance.date)
-        instance.meal_type = validated_data.get('meal_type', instance.meal_type)
+        instance.meal_type = validated_data.get(
+            'meal_type', instance.meal_type)
         instance.save()
-        
+
         # Lógica para actualizar los alimentos en la comida (más compleja)
         # Para el MVP, simplificaremos asumiendo que para actualizar, se podría borrar y recrear los meal_food_items
         # o manejar adiciones/eliminaciones/modificaciones de forma granular.
@@ -140,4 +158,3 @@ class MealSerializer(serializers.ModelSerializer):
         # 3. Eliminar los MealFoodItems existentes que no estén en meal_food_items_data.
 
         return instance
-        

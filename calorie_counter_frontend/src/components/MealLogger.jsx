@@ -320,7 +320,7 @@ function MealLogger() {
                   <span>Cal: {item.calculated_calories}</span>
                   <span>Prot: {item.calculated_proteins}g</span>
                   <span>Gra: {item.calculated_fats}g</span>
-                  <span>Carb: {item.calculated_carbohydrates}g</span>
+                  <span>Carb: {item.calculated_carbs}g</span>
                 </div>
               </li>
             ))}
@@ -341,7 +341,7 @@ function MealLogger() {
           <strong>Grasas:</strong> {mealTotals.totalFats} g
         </p>
         <p>
-          <strong>Carbohidratos:</strong> {mealTotals.totalCarbohydrates} g
+          <strong>Carbohidratos:</strong> {mealTotals.totalCarbs} g
         </p>
       </div>
 
